@@ -1,0 +1,73 @@
+{
+  "name": "@toridoriv/toolbox",
+  "version": "0.1.0",
+  "description": "Utilities for JavaScript/TypeScript development.",
+  "type": "module",
+  "license": "GPL-3.0-only",
+  "main": "./lib/main.cjs",
+  "module": "./lib/main.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./lib/main.d.ts",
+        "default": "./lib/main.js"
+      },
+      "require": {
+        "types": "./lib/main.d.cts",
+        "default": "./lib/main.cjs"
+      }
+    }
+  },
+  "types": "./lib/main.d.ts",
+  "author": {
+    "name": "Victoria Rodriguez",
+    "email": "vrodriguezfe@icloud.com",
+    "url": "https://github.com/toridoriv"
+  },
+  "homepage": "https://github.com/toridoriv/fs-plus",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/toridoriv/fs-plus.git"
+  },
+  "files": [
+    "lib",
+    "README.md",
+    "LICENSE"
+  ],
+  "bugs": {
+    "url": "https://github.com/toridoriv/fs-plus/issues",
+    "email": "vrodriguezfe@icloud.com"
+  },
+  "scripts": {
+    "chmod": "find sbin -type f -not -name '*utils*' -not -name '*helpers*' -exec chmod +x {} \\;",
+    "prebuild": "rm -rf lib",
+    "build": "tsup",
+    "postbuild": "npm run fix:build",
+    "fix:build": "scripty",
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@toridoriv/eslint-config": "github:toridoriv/eslint-config",
+    "@toridoriv/fs-plus": "github:toridoriv/fs-plus",
+    "@typescript-eslint/eslint-plugin": "^8.46.2",
+    "@vitest/coverage-istanbul": "^4.0.5",
+    "@vitest/coverage-v8": "^4.0.5",
+    "eslint": "^9.38.0",
+    "prettier": "^3.6.2",
+    "scripty": "github:toridoriv/scripty",
+    "tslog": "^4.10.2",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.5"
+  },
+  "overrides": {
+    "eslint": "$eslint",
+    "typescript": "$typescript"
+  },
+   "config": {
+    "scripty": {
+      "path": "sbin"
+    }
+  }
+}
