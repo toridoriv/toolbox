@@ -7,7 +7,7 @@
     "diagnostics": true,
     "emitDeclarationOnly": true,
     "esModuleInterop": true,
-    "isolatedDeclarations": true,
+    "isolatedDeclarations": false,
     "lib": ["ESNext"],
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
