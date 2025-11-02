@@ -219,3 +219,8 @@ export type SetOptional<T extends Any.Object, K extends keyof T> = Expand<
     [P in K]?: T[P] extends Maybe<infer U> ? U : T[P];
   }
 >;
+
+/**
+ * Constructs a type by making the properties in `K` of type `T` required.
+ */
+export type SetRequired<T extends Any.Object, K extends keyof T> = Expand<Omit<T, K> & Required<Pick<T, K>>>;

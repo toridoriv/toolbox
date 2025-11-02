@@ -163,6 +163,10 @@ type DeepPartial<T, E = Expand.Exclusions> = T extends E ? T : T extends object 
 type SetOptional<T extends Any.Object, K extends keyof T> = Expand<Omit<T, K> & {
     [P in K]?: T[P] extends Maybe<infer U> ? U : T[P];
 }>;
+/**
+ * Constructs a type by making the properties in `K` of type `T` required.
+ */
+type SetRequired<T extends Any.Object, K extends keyof T> = Expand<Omit<T, K> & Required<Pick<T, K>>>;
 
 /**
  * Creates a deep clone of the given value.
@@ -441,4 +445,4 @@ declare namespace merge {
     var regexp: <A extends RegExp, B extends RegExp, O extends Merge.Options = {}>(a: A, b: B, options?: O) => Merge<A, B, O>;
 }
 
-export { Any, type AreCompatible, type DeepPartial, Expand, type Extends, type IncludeByType, Is, type KeyOf, type Maybe, Merge, type ObjectLike, type Primitive, type SetOptional, TypeOf, type WithProperty, clone, coerce, defineValue, getUnique, is, isInstanceOf, merge, typeOf };
+export { Any, type AreCompatible, type DeepPartial, Expand, type Extends, type IncludeByType, Is, type KeyOf, type Maybe, Merge, type ObjectLike, type Primitive, type SetOptional, type SetRequired, TypeOf, type WithProperty, clone, coerce, defineValue, getUnique, is, isInstanceOf, merge, typeOf };
