@@ -146,6 +146,23 @@ type ObjectLike = Any.Array | Any.Map | Any.Function | Any.Set | Date | RegExp |
  * - **undefined:** Represents a value that has not been assigned or is not defined.
  */
 type Primitive = string | number | bigint | boolean | symbol | null | undefined;
+/**
+ * Represents a type that can either be of type `T` or `undefined`.
+ */
+type Maybe<T> = T | undefined;
+/**
+ * Constructs a type by making all properties of `T` recursively optional,
+ * except for those types specified in `E`, which remain unchanged.
+ */
+type DeepPartial<T, E = Expand.Exclusions> = T extends E ? T : T extends object ? {
+    [K in keyof T]?: DeepPartial<T[K], Expand.Exclusions> | undefined;
+} : T;
+/**
+ * Constructs a type by making the properties in `K` of type `T` optional.
+ */
+type SetOptional<T extends Any.Object, K extends keyof T> = Expand<Omit<T, K> & {
+    [P in K]?: T[P] extends Maybe<infer U> ? U : T[P];
+}>;
 
 /**
  * Creates a deep clone of the given value.
@@ -424,4 +441,4 @@ declare namespace merge {
     var regexp: <A extends RegExp, B extends RegExp, O extends Merge.Options = {}>(a: A, b: B, options?: O) => Merge<A, B, O>;
 }
 
-export { Any, type AreCompatible, Expand, type Extends, type IncludeByType, Is, type KeyOf, Merge, type ObjectLike, type Primitive, TypeOf, type WithProperty, clone, coerce, defineValue, getUnique, is, isInstanceOf, merge, typeOf };
+export { Any, type AreCompatible, type DeepPartial, Expand, type Extends, type IncludeByType, Is, type KeyOf, type Maybe, Merge, type ObjectLike, type Primitive, type SetOptional, TypeOf, type WithProperty, clone, coerce, defineValue, getUnique, is, isInstanceOf, merge, typeOf };

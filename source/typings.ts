@@ -195,3 +195,27 @@ export type ObjectLike = Any.Array | Any.Map | Any.Function | Any.Set | Date | R
  * - **undefined:** Represents a value that has not been assigned or is not defined.
  */
 export type Primitive = string | number | bigint | boolean | symbol | null | undefined;
+
+/**
+ * Represents a type that can either be of type `T` or `undefined`.
+ */
+export type Maybe<T> = T | undefined;
+
+/**
+ * Constructs a type by making all properties of `T` recursively optional,
+ * except for those types specified in `E`, which remain unchanged.
+ */
+export type DeepPartial<T, E = Expand.Exclusions> = T extends E
+  ? T
+  : T extends object
+    ? { [K in keyof T]?: DeepPartial<T[K], Expand.Exclusions> | undefined }
+    : T;
+
+/**
+ * Constructs a type by making the properties in `K` of type `T` optional.
+ */
+export type SetOptional<T extends Any.Object, K extends keyof T> = Expand<
+  Omit<T, K> & {
+    [P in K]?: T[P] extends Maybe<infer U> ? U : T[P];
+  }
+>;
