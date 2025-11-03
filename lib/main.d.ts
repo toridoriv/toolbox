@@ -167,6 +167,10 @@ type SetOptional<T extends Any.Object, K extends keyof T> = Expand<Omit<T, K> & 
  * Constructs a type by making the properties in `K` of type `T` required.
  */
 type SetRequired<T extends Any.Object, K extends keyof T> = Expand<Omit<T, K> & Required<Pick<T, K>>>;
+/**
+ * Constructs a type by making the properties of type `T` that are `U | undefined` optional.
+ */
+type SetMaybeAsOptional<T extends Any.Object> = SetOptional<T, KeyOf<IncludeByType<T, undefined>>>;
 
 /**
  * Creates a deep clone of the given value.
@@ -395,9 +399,9 @@ declare namespace Merge {
     type Sets<A, B> = A extends Set<infer T> ? (B extends Set<infer U> ? Set<T | U> : never) : never;
     type Maps<A, B> = A extends Map<infer AK, infer AV> ? (B extends Map<infer BK, infer BV> ? Map<AK | BK, AV | BV> : never) : never;
     type Arrays<A, B> = A extends Array<infer T> ? (B extends Array<infer U> ? Array<T | U> : never) : never;
-    export type Objects<T extends Any.Object, U extends Any.Object, Opts extends Merge.Options> = Expand.Recursive<{
-        [K in keyof T | keyof U]: K extends keyof T | keyof U ? GetValue<T[K], U[K], ParsedOptions<Opts>> : never;
-    }>;
+    export type Objects<T extends Any.Object, U extends Any.Object, Opts extends Merge.Options> = SetMaybeAsOptional<Expand.Recursive<{
+        [K in keyof T | keyof U]: K extends keyof U ? GetValue<U[K], U[K], ParsedOptions<Opts>> : K extends keyof T ? GetValue<T[K], T[K], ParsedOptions<Opts>> : never;
+    }>>;
     type GetReplaceValue<A, B> = B extends undefined ? A : B;
     type ResultByKindOf<A, B, O extends AllOptions> = {
         array: O["array"] extends "merge" ? Arrays<A, B> : GetReplaceValue<A, B>;
@@ -445,4 +449,4 @@ declare namespace merge {
     var regexp: <A extends RegExp, B extends RegExp, O extends Merge.Options = {}>(a: A, b: B, options?: O) => Merge<A, B, O>;
 }
 
-export { Any, type AreCompatible, type DeepPartial, Expand, type Extends, type IncludeByType, Is, type KeyOf, type Maybe, Merge, type ObjectLike, type Primitive, type SetOptional, type SetRequired, TypeOf, type WithProperty, clone, coerce, defineValue, getUnique, is, isInstanceOf, merge, typeOf };
+export { Any, type AreCompatible, type DeepPartial, Expand, type Extends, type IncludeByType, Is, type KeyOf, type Maybe, Merge, type ObjectLike, type Primitive, type SetMaybeAsOptional, type SetOptional, type SetRequired, TypeOf, type WithProperty, clone, coerce, defineValue, getUnique, is, isInstanceOf, merge, typeOf };

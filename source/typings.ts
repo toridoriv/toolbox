@@ -224,3 +224,8 @@ export type SetOptional<T extends Any.Object, K extends keyof T> = Expand<
  * Constructs a type by making the properties in `K` of type `T` required.
  */
 export type SetRequired<T extends Any.Object, K extends keyof T> = Expand<Omit<T, K> & Required<Pick<T, K>>>;
+
+/**
+ * Constructs a type by making the properties of type `T` that are `U | undefined` optional.
+ */
+export type SetMaybeAsOptional<T extends Any.Object> = SetOptional<T, KeyOf<IncludeByType<T, undefined>>>;

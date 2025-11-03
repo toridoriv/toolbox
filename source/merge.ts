@@ -2,7 +2,7 @@ import { clone } from "./clone.ts";
 import { getUnique } from "./collections.ts";
 import { coerce, is } from "./is.ts";
 import { type TypeOf, typeOf } from "./type-of.ts";
-import type { Any, Expand, KeyOf } from "./typings.ts";
+import type { Any, Expand, KeyOf, SetMaybeAsOptional } from "./typings.ts";
 
 /**
  * Represents the result of merging two values of potentially different types.
@@ -107,9 +107,15 @@ export namespace Merge {
 
   type Arrays<A, B> = A extends Array<infer T> ? (B extends Array<infer U> ? Array<T | U> : never) : never;
 
-  export type Objects<T extends Any.Object, U extends Any.Object, Opts extends Merge.Options> = Expand.Recursive<{
-    [K in keyof T | keyof U]: K extends keyof T | keyof U ? GetValue<T[K], U[K], ParsedOptions<Opts>> : never;
-  }>;
+  export type Objects<T extends Any.Object, U extends Any.Object, Opts extends Merge.Options> = SetMaybeAsOptional<
+    Expand.Recursive<{
+      [K in keyof T | keyof U]: K extends keyof U
+        ? GetValue<U[K], U[K], ParsedOptions<Opts>>
+        : K extends keyof T
+          ? GetValue<T[K], T[K], ParsedOptions<Opts>>
+          : never;
+    }>
+  >;
 
   type GetReplaceValue<A, B> = B extends undefined ? A : B;
 
@@ -346,8 +352,6 @@ merge.regexp = function mergeRegexp<A extends RegExp, B extends RegExp, O extend
   }
 
   Object.defineProperties(preresult, additionalProps);
-  // preresult = Object.setPrototypeOf(preresult, a.constructor.prototype);
-  // preresult = Object.setPrototypeOf(preresult, b.constructor.prototype);
 
   return preresult;
 };
