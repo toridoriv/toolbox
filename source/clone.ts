@@ -1,4 +1,4 @@
-import { defineValue } from "./collections.ts";
+import { defineValue, or } from "./collections.ts";
 import { coerce, is } from "./is.ts";
 import { type TypeOf, typeOf } from "./type-of.ts";
 import type { Any, Primitive } from "./typings.ts";
@@ -81,16 +81,26 @@ clone.error = function cloneError<T extends Error>(error: T): T {
     });
   }
 
-  const clonedError = Object.create(error.constructor.prototype, Object.getOwnPropertyDescriptors(error));
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { set, get, ...stackDescriptor } = Object.getOwnPropertyDescriptor(error, "stack") || {};
+  const properties = Object.getOwnPropertyDescriptors(error);
+  const clonedError = Object.create(error.constructor.prototype, properties);
 
-  Object.defineProperty(clonedError, "stack", {
-    ...stackDescriptor,
-    value: error.stack,
-  });
+  const { get: _, set: __, ...stackDescriptor } = or(Object.getOwnPropertyDescriptor(error, "stack"), {});
 
-  return clone.object(error, clonedError);
+  (() => {
+    let stack = error.stack;
+
+    Object.defineProperty(clonedError, "stack", {
+      ...stackDescriptor,
+      get() {
+        return stack;
+      },
+      set(value: string) {
+        stack = value;
+      },
+    });
+  })();
+
+  return clonedError;
 };
 
 /**
